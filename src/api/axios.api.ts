@@ -2,9 +2,10 @@
 import axios from "axios";
 import { getTokenFromLocalstorage } from "../helpers/localstarage.helper";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://budget-front-vercel.vercel.app";
+
 export const instance = axios.create({
-  // baseURL: "http://localhost:5000/",
-  baseURL: "https://budget-back-vercel.vercel.app",
+  baseURL: API_URL,
 });
 
 // Добавляем интерцептор для каждого запроса
