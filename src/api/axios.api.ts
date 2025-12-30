@@ -2,8 +2,8 @@
 import axios from "axios";
 import { getTokenFromLocalstorage } from "../helpers/localstarage.helper";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://budget-back-vercel.vercel.app";
-const API_PREFIX = import.meta.env.VITE_API_PREFIX || "/api";
+const API_URL = import.meta.env.VITE_API_URL || "https://budget-front-vercel.vercel.app";
+const API_PREFIX = import.meta.env.VITE_API_PREFIX || "";
 
 // Убираем слэш в конце URL, если есть
 const baseURL = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
@@ -27,6 +27,16 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Логируем ошибки для отладки
+    if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
+      console.error("Network Error:", {
+        message: error.message,
+        baseURL: instance.defaults.baseURL,
+        url: error.config?.url,
+        fullURL: `${instance.defaults.baseURL}${error.config?.url}`,
+      });
+    }
+    
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.href = "/auth";
