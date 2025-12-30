@@ -3,15 +3,10 @@ import axios from "axios";
 import { getTokenFromLocalstorage } from "../helpers/localstarage.helper";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://budget-front-vercel.vercel.app";
-const API_PREFIX = import.meta.env.VITE_API_PREFIX || "";
 
-// Убираем слэш в конце URL, если есть
-const baseURL = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
-// Добавляем префикс API
-const fullBaseURL = `${baseURL}${API_PREFIX}`;
 
 export const instance = axios.create({
-  baseURL: fullBaseURL,
+  baseURL: API_URL,
 });
 
 // Добавляем интерцептор для каждого запроса
