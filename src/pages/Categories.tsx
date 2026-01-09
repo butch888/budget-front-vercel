@@ -6,6 +6,7 @@ import CategoryModal from "../components/CategoryModal";
 import { instance } from "../api/axios.api";
 import type { ActionFunctionArgs } from "react-router-dom";
 import type { ICategory } from "../types/types";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const categoriesAction = async ({ request }: ActionFunctionArgs) => {
@@ -47,6 +48,7 @@ const Categories: FC = () => {
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [categoryId, setCategoryId] = useState<number>(0);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  useDocumentTitle("Categories");
 
   return (
     <div className="p-3 sm:p-4 md:p-6">

@@ -4,8 +4,8 @@ import { getTokenFromLocalstorage } from "../helpers/localstarage.helper";
 
 // URL бэкенда на Vercel (нужно будет установить в переменных окружения Vercel)
 // Для локальной разработки используйте: http://localhost:5000
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-// const API_URL = "http://localhost:5000";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = "http://localhost:5000";
 
 export const instance = axios.create({
   baseURL: API_URL,

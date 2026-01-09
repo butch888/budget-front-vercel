@@ -7,6 +7,7 @@ import TransactionTable from "../components/TransactionTable";
 import { useLoaderData } from "react-router-dom";
 import { formatToUSDT } from "../helpers/currencyHelper";
 import Chart from "../components/Chart";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const transactionLoader = async () => {
@@ -72,6 +73,7 @@ const AdaptiveAmount: FC<{ amount: number; className?: string }> = ({ amount, cl
 
 const Transactions: FC = () => {
   const { totalIncome, totalExpense } = useLoaderData() as IResponseTransactionLoader;
+  useDocumentTitle("Transactions");
 
   return (
     <div className="p-6">

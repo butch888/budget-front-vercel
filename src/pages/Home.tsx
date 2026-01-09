@@ -1,9 +1,11 @@
 import type { FC } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const Home: FC = () => {
   const isAuth = useAuth();
+  useDocumentTitle("Home");
 
   if (isAuth) {
     return (

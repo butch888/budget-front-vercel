@@ -7,6 +7,7 @@ import { useAppDispatch } from "../store/hooks";
 import { login } from "../store/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const Auth: FC = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -17,6 +18,7 @@ const Auth: FC = () => {
   const dispath = useAppDispatch();
   const navigate = useNavigate();
   const isAuth = useAuth();
+  useDocumentTitle(isLogin ? "Sign In" : "Sign Up");
 
   // Перенаправление если пользователь уже авторизован
   useEffect(() => {
