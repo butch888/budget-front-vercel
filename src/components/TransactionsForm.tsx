@@ -11,17 +11,6 @@ const TransactionsForm: FC = () => {
   return (
     <div className="rounded-2xl sm:rounded-3xl border border-slate-700/50 bg-slate-800/50 p-4 sm:p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
       <Form className="grid gap-4 sm:gap-6" method="post" action="/transactions">
-        {/* Заголовок формы */}
-        <div className="mb-1 sm:mb-2">
-          <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
-            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            New Transaction
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-400">Add your income or expense</p>
-        </div>
-
         {/* Поля ввода */}
         <div className="grid gap-3 sm:gap-4">
           <label htmlFor="title" className="space-y-1 sm:space-y-2">

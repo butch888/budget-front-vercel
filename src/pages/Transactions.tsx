@@ -8,6 +8,7 @@ import { useLoaderData } from "react-router-dom";
 import { formatToUSDT } from "../helpers/currencyHelper";
 import Chart from "../components/Chart";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import { useState } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const transactionLoader = async () => {
@@ -73,6 +74,10 @@ const AdaptiveAmount: FC<{ amount: number; className?: string }> = ({ amount, cl
 
 const Transactions: FC = () => {
   const { totalIncome, totalExpense } = useLoaderData() as IResponseTransactionLoader;
+  const [isFormExpanded, setIsFormExpanded] = useState(false);
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
+  const [isTableExpanded, setIsTableExpanded] = useState(true);
+  const [isChartExpanded, setIsChartExpanded] = useState(true);
   useDocumentTitle("Transactions");
 
   return (
@@ -88,114 +93,201 @@ const Transactions: FC = () => {
       <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-3">
         {/* Add Transaction Form */}
         <div className="xl:col-span-2">
-          <TransactionsForm />
+          <div className="rounded-2xl sm:rounded-3xl border border-slate-700/50 bg-slate-800/50 shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <button
+              onClick={() => setIsFormExpanded(!isFormExpanded)}
+              className="w-full p-4 sm:p-6 flex items-center justify-between text-left transition-colors duration-200 hover:bg-slate-700/30"
+            >
+              <h2 className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-lg sm:text-xl font-semibold text-white">
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  New Transaction
+                </div>
+                <span className="text-xs sm:text-sm text-gray-400 font-normal">Add your income or expense</span>
+              </h2>
+              <svg
+                className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                  isFormExpanded ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {isFormExpanded && (
+              <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+                <TransactionsForm />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Statistic block */}
         <div className="space-y-6">
           {/* Total Statistics */}
-          <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
-            <h2 className="mb-4 flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
-              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-              <span className="whitespace-nowrap">Financial Overview</span>
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 p-4 text-center transition-transform duration-200 hover:scale-105">
-                <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
-                  <svg className="h-5 w-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                    />
-                  </svg>
-                </div>
-                <p className="mb-2 text-sm font-medium text-gray-400">Total Income</p>
-                <div className="flex min-h-[48px] items-center justify-center px-1">
-                  <AdaptiveAmount amount={totalIncome} className="text-emerald-300" />
-                </div>
-              </div>
-
-              <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-500/10 to-red-600/10 p-4 text-center transition-transform duration-200 hover:scale-105">
-                <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/20">
-                  <svg className="h-5 w-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <p className="mb-2 text-sm font-medium text-gray-400">Total Expense</p>
-                <div className="flex min-h-[48px] items-center justify-center px-1">
-                  <AdaptiveAmount amount={totalExpense} className="text-red-300" />
-                </div>
-              </div>
-            </div>
-
-            {/* Balance */}
-            <div className="mt-4 border-t border-slate-700/50 pt-4">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-gray-400">Balance:</span>
-                <div className="max-w-[180px] text-right">
-                  <AdaptiveAmount
-                    amount={totalIncome - totalExpense}
-                    className={totalIncome - totalExpense >= 0 ? "text-cyan-300" : "text-red-300"}
+          <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <button
+              onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
+              className="w-full p-6 flex items-center justify-between text-left transition-colors duration-200 hover:bg-slate-700/30"
+            >
+              <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                   />
+                </svg>
+                <span className="whitespace-nowrap">Financial Overview</span>
+              </h2>
+              <svg
+                className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                  isOverviewExpanded ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {isOverviewExpanded && (
+              <div className="px-6 pb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 p-4 text-center transition-transform duration-200 hover:scale-105">
+                    <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
+                      <svg className="h-5 w-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                        />
+                      </svg>
+                    </div>
+                    <p className="mb-2 text-sm font-medium text-gray-400">Total Income</p>
+                    <div className="flex min-h-[48px] items-center justify-center px-1">
+                      <AdaptiveAmount amount={totalIncome} className="text-emerald-300" />
+                    </div>
+                  </div>
+
+                  <div className="flex min-h-[120px] flex-col justify-center rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-500/10 to-red-600/10 p-4 text-center transition-transform duration-200 hover:scale-105">
+                    <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/20">
+                      <svg className="h-5 w-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <p className="mb-2 text-sm font-medium text-gray-400">Total Expense</p>
+                    <div className="flex min-h-[48px] items-center justify-center px-1">
+                      <AdaptiveAmount amount={totalExpense} className="text-red-300" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Balance */}
+                <div className="mt-4 border-t border-slate-700/50 pt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-gray-400">Balance:</span>
+                    <div className="max-w-[180px] text-right">
+                      <AdaptiveAmount
+                        amount={totalIncome - totalExpense}
+                        className={totalIncome - totalExpense >= 0 ? "text-cyan-300" : "text-red-300"}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Chart */}
-          <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
-            <h2 className="mb-4 flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
-              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-                />
+          <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <button
+              onClick={() => setIsChartExpanded(!isChartExpanded)}
+              className="w-full p-6 flex items-center justify-between text-left transition-colors duration-200 hover:bg-slate-700/30"
+            >
+              <h2 className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-white">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+                  />
+                </svg>
+                <span className="whitespace-nowrap">Income vs Expense</span>
+              </h2>
+              <svg
+                className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                  isChartExpanded ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-              <span className="whitespace-nowrap">Income vs Expense</span>
-            </h2>
-            <Chart totalIncome={totalIncome} totalExpense={totalExpense} />
+            </button>
+            {isChartExpanded && (
+              <div className="px-6 pb-6">
+                <Chart totalIncome={totalIncome} totalExpense={totalExpense} />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Transaction Table */}
       <div className="mt-8">
-        <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl">
-          <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold text-white">
-            <svg className="h-5 w-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
+        <div className="rounded-3xl border border-slate-700/50 bg-slate-800/50 shadow-2xl shadow-black/20 backdrop-blur-xl">
+          <button
+            onClick={() => setIsTableExpanded(!isTableExpanded)}
+            className="w-full p-6 flex items-center justify-between text-left transition-colors duration-200 hover:bg-slate-700/30"
+          >
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-white">
+              <svg className="h-5 w-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+              Recent Transactions
+            </h2>
+            <svg
+              className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                isTableExpanded ? "rotate-180" : ""
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
-            Recent Transactions
-          </h2>
-          <TransactionTable limit={7} />
+          </button>
+          {isTableExpanded && (
+            <div className="px-6 pb-6">
+              <TransactionTable limit={7} />
+            </div>
+          )}
         </div>
       </div>
     </div>
